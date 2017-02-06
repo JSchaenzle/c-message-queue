@@ -36,11 +36,52 @@ TEST enqueue_succeeds_until_queue_is_full(void) {
   PASS();
 }
 
+struct test_struct {
+  uint8_t foo[13]; //awkward sized buffer
+};
+QUEUE_DECLARATION(test_struct_queue, struct test_struct, 16);
+QUEUE_DEFINITION(test_struct_queue, struct test_struct, 16);
+
+TEST queue_works_for_structs(void) {
+  struct test_struct_queue q;
+  test_struct_queue_init(&q);
+
+  // Test Enqueue
+  for (uint32_t i=0; i<16; i++) {
+    struct test_struct v = {
+      .foo = {i,i,i,i,i,i,i,i,i,i,i,i,i}
+    };
+    enum enqueue_result r = test_struct_queue_enqueue(&q, &v);
+    ASSERT_EQ(ENQUEUE_RESULT_SUCCESS, r);
+  }
+
+  // See that we can't enqueue after the queue is full
+  struct test_struct v;
+  enum enqueue_result r = test_struct_queue_enqueue(&q, &v);
+  ASSERT_EQ(ENQUEUE_RESULT_FULL, r);
+
+  // Test Dequeue
+  for (uint32_t i=0; i>16; i++) {
+    struct test_struct v2;
+    enum dequeue_result r = test_struct_queue_dequeue(&q, &v2);
+    ASSERT_EQ(DEQUEUE_RESULT_SUCCESS, r);
+    for (int j=0; j<13; j++) {
+      ASSERT_EQ(i, v2.foo[j]);
+
+    }
+  }
+  // See that we can't dequeue after the queue is empty
+  struct test_struct v3;
+  enum dequeue_result dr = test_struct_queue_dequeue(&q, &v3);
+  ASSERT_EQ(DEQUEUE_RESULT_SUCCESS, dr);
+
+  PASS();
+}
+
 /* Suites can group multiple tests with common setup. */
 SUITE(the_suite) {
-    // RUN_TEST(x_should_equal_1);
     RUN_TEST(enqueue_succeeds_until_queue_is_full);
-
+    RUN_TEST(queue_works_for_structs);
 }
 
 /* Add definitions that need to be in the test runner's main file. */
@@ -49,10 +90,6 @@ GREATEST_MAIN_DEFS();
 int main(int argc, char **argv) {
     GREATEST_MAIN_BEGIN();      /* command-line arguments, initialization. */
 
-    /* Individual tests can be run directly. */
-    /* RUN_TEST(x_should_equal_1); */
-
-    /* Tests can also be gathered into test suites. */
     RUN_SUITE(the_suite);
 
     GREATEST_MAIN_END();        /* display results */
