@@ -25,16 +25,13 @@ struct NAME {                                                                   
 void NAME ## _init(struct NAME * p_queue);                                              \
 enum enqueue_result NAME ##_enqueue(struct NAME * p_queue, ITEM_TYPE * p_new_item);     \
 enum dequeue_result NAME ##_dequeue(struct NAME * p_queue, ITEM_TYPE * p_item_out);     \
-bool NAME ##_is_empty(struct NAME * p_queue);                                          
+bool NAME ##_is_empty(struct NAME * p_queue);
 
-#define QUEUE_DEFINITION(NAME, ITEM_TYPE, NUM_ITEMS)                                    \
+#define QUEUE_DEFINITION(NAME, ITEM_TYPE)                                               \
 void NAME ## _init(struct NAME * p_queue)                                               \
 {                                                                                       \
-  *p_queue = (struct NAME){                                                             \
-    .read_idx = 0,                                                                      \
-    .write_idx = 0,                                                                     \
-    .items = {}                                                                         \
-  };                                                                                    \
+  p_queue->read_idx = 0;                                                                \
+  p_queue->write_idx = 0;                                                               \
 }                                                                                       \
                                                                                         \
 enum enqueue_result NAME ##_enqueue(struct NAME  * p_queue, ITEM_TYPE * p_new_item) {   \
