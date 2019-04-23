@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 QUEUE_DECLARATION(test_int_queue, uint32_t, 8);
-QUEUE_DEFINITION(test_int_queue, uint32_t, 8);
+QUEUE_DEFINITION(test_int_queue, uint32_t);
 
 TEST queue_works_with_integers(void) {
   struct test_int_queue q;
@@ -45,7 +45,7 @@ struct test_struct {
   uint8_t foo[13]; //awkward sized buffer
 };
 QUEUE_DECLARATION(test_struct_queue, struct test_struct, 16);
-QUEUE_DEFINITION(test_struct_queue, struct test_struct, 16);
+QUEUE_DEFINITION(test_struct_queue, struct test_struct);
 
 TEST queue_works_for_structs(void) {
   struct test_struct_queue q;
