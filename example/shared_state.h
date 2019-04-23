@@ -1,7 +1,7 @@
 #ifndef SHARED_STATE_H
 #define SHARED_STATE_H
 #include <stdint.h>
-#include "queue.h"
+#include "../queue.h"
 
 struct uart_msg {
   uint8_t msg[25];
