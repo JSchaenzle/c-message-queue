@@ -1,6 +1,6 @@
 #include "shared_state.h"
 
-QUEUE_DEFINITION(uart_msg_queue, struct uart_msg, 4);
+QUEUE_DEFINITION(uart_msg_queue, struct uart_msg);
 /*
   The above macro provides implementations of:
    uart_msg_queue_init()
